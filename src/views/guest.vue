@@ -52,13 +52,13 @@ export default {
   },
   methods: {
     guest() {
+      let self = this;
+      self.$store.state.firstname = this.firstname;
+      self.$store.state.lastname = this.lastname;
       if (this.firstname && this.lastname) {
         this.$router.push({
           name: "chatbot",
-          params: {
-            firstname: this.firstname,
-            lastname: this.lastname
-          }
+          params: { firstname: this.firstname, lastname: this.lastname }
         });
       } else {
         this.errorText = "Please fill in the necessary details!";

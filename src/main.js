@@ -5,6 +5,13 @@ import vuetify from "./plugins/vuetify";
 import VueResource from "vue-resource";
 import VueSimpleAlert from "vue-simple-alert";
 import VueSocketIO from "vue-socket.io";
+import { store } from "./plugins/store";
+import VueUp from "vueup";
+
+Vue.use(VueUp);
+
+import VueChatScroll from "vue-chat-scroll";
+Vue.use(VueChatScroll);
 
 Vue.use(
     new VueSocketIO({
@@ -22,5 +29,6 @@ Vue.config.productionTip = false;
 new Vue({
     router,
     vuetify,
+    store: store,
     render: h => h(App)
 }).$mount("#app");

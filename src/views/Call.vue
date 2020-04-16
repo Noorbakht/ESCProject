@@ -1,10 +1,16 @@
 <template>
   <div class="call" id="call">
-    <header class="header">
-      Header
-      <audio id="globalAudioTag" autoplay />
-      <!--to allow customer to receive audio from agent-->
-    </header>
+    <transition name="fade">
+      <Waitpage v-bind:isConnecting="isConnecting" v-if="!start" />
+    </transition>
+    <audio id="globalAudioTag" autoplay></audio>
+    <video id="largevideo" autoplay></video>
+    <video id="globalVideoTag" autoplay style="display:none;"></video>
+    <v-footer width="100%" padless>
+      <v-btn id="endcall" @click="endCall" height="58px" width="100%" x-large depressed tile>
+        <h3>End Call</h3>
+      </v-btn>
+    </v-footer>
   </div>
 </template>
 
@@ -14,24 +20,22 @@ import rainbowSDK from "rainbow-web-sdk";
 
 export default {
   name: "Call",
-  props: ["agentId"],
   components: {},
   data: () => ({
     start: false,
-    connecting: false,
+    isConnecting: false,
     cancelled: false,
     call: "",
     exit: false
   }),
   mounted() {
-    console.log(this.$route.params.agentId);
     let self = this;
     self.checkCall();
-    if (self.agentId === "") {
-      console.log("trying");
-    } else {
-      self.connecting = true;
+    if (this.$store.state.agentId != "") {
+      self.isConnecting = true;
       self.startCall();
+    } else {
+      console.log("agent id empty");
     }
   },
   methods: {
@@ -41,8 +45,18 @@ export default {
       } else {
         console.log("Browser does not support calls");
       }
+      if (rainbowSDK.webRTC.hasACamera()) {
+        console.log("Browser supports video");
+      } else {
+        console.log("Browser does not support video");
+      }
+      if (rainbowSDK.webRTC.hasAMicrophone()) {
+        console.log("Browser supports microphone");
+      } else {
+        console.log("Browser does not support microphone");
+      }
       navigator.mediaDevices //authorise the application to access media device
-        .getUserMedia({ audio: true })
+        .getUserMedia({ audio: true, video: true })
         .then(function(stream) {
           stream.getTracks().forEach(function(track) {
             track.stop();
@@ -51,17 +65,18 @@ export default {
             .enumerateDevices()
             .then(function(devices) {
               devices.forEach(function(device) {
+                console.log(device);
                 if (device.deviceId === "default") {
                   console.log(device);
                   console.log(device.label, "is available");
+                  rainbowSDK.webRTC.useMicrophone("default");
+                  rainbowSDK.webRTC.useSpeaker("default");
                 }
               });
             })
             .catch(function(error) {
               console.log(error);
             });
-          rainbowSDK.webRTC.useMicrophone("default");
-          rainbowSDK.webRTC.useSpeaker("default");
         })
         .catch(function(error) {
           console.log(error);
@@ -70,19 +85,20 @@ export default {
     startCall: async function() {
       let self = this;
       try {
-        console.log(this.$route.params.agentId);
+        console.log(this.$store.state.agentId);
         let contact = await rainbowSDK.contacts.searchById(
-          this.$route.params.agentId
+          this.$store.state.agentId
         );
-        var res = rainbowSDK.webRTC.callInAudio(contact); //start to call the contact with available agent
+        console.log(contact);
+        let res = rainbowSDK.webRTC.callInAudio(contact);
         if (res.label === "OK") {
           console.log("calling");
         }
-        self.start = true;
         document.addEventListener(
           rainbowSDK.webRTC.RAINBOW_ONWEBRTCCALLSTATECHANGED,
           self.onWebRTCCallChanged
         );
+        self.start = true;
       } catch (err) {
         console.log(err);
       }
@@ -90,29 +106,38 @@ export default {
     onWebRTCCallChanged: async function(event) {
       let self = this;
       self.call = event.detail;
-      //console.log("OnWebRTCCallChanged event", event.detail.status);
-      if (event.detail.status.value === "Unknown") {
-        document.removeEventListener(
-          rainbowSDK.webRTC.RAINBOW_ONWEBRTCCALLSTATECHANGED,
-          self.onWebRTCCallChanged
-        );
-        if (self.exit) {
-          await self.$router.push({ name: "chatbot" });
+      console.log("OnWebRTCCallChanged event", event.detail.status);
+      console.log(self.call.status.value);
+      if (self.call.status.value === "incommingCall") {
+        // You have an incoming call, do something about it:
+        // Detect the type of incoming call
+
+        if (self.call.remoteMedia === 3) {
+          // The incoming call is of type audio + video
+          rainbowSDK.webRTC.answerInVideo(self.call);
+
+          // Populate the #minivideo and #largevideo elements with the video streams
+
+          rainbowSDK.webRTC.showLocalVideo();
+          rainbowSDK.webRTC.showRemoteVideo(self.call);
+        } else if (self.call.remoteMedia === 1) {
+          // The incoming call is of type audio
+          rainbowSDK.webRTC.answerInAudio(self.call);
         }
       }
-    },
-    endCall: async function() {
-      let self = this;
-      self.exit = true;
-      await rainbowSDK.webRTC.release(self.call);
-      console.log("Session Ended");
-    },
-    moveToChat: async function() {
-      console.log("moving to chat");
-      await rainbowSDK.webRTC.release(this.call);
-      await this.$router.push({ name: "chatbot" });
     }
   }
+  // endCall: async function() {
+  //   let self = this;
+  //   self.exit = true;
+  //   await rainbowSDK.webRTC.release(self.call);
+  //   console.log("Session Ended");
+  // },
+  // moveToChat: async function() {
+  //   console.log("moving to chat");
+  //   await rainbowSDK.webRTC.release(this.call);
+  //   await this.$router.push({ name: "chatbot" });
+  // }
 };
 </script>
 
@@ -123,8 +148,10 @@ export default {
   align-items: center;
   justify-content: center;
   height: 100vh;
+  text-align: center;
+  padding: 20px;
 }
-.callBox {
+.box {
   height: 100%;
   width: 100%;
   display: flex;

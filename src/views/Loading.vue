@@ -1,10 +1,9 @@
 /* eslint-disable prettier/prettier */
 <template>
   <div class="load">
-    <h1
-      v-if="!isConnecting"
-      class="font-weight-light ma-10"
-    >Bringing you to your chatpage in a short while</h1>
+    <h1 v-if="!isConnecting" class="font-weight-light ma-10">
+      Bringing you to your chatpage in a short while
+    </h1>
     <v-progress-circular
       :rotate="-90"
       :size="200"
@@ -12,7 +11,8 @@
       :value="value"
       color="teal"
       indeterminate
-    >{{ value }}</v-progress-circular>
+      >{{ value }}</v-progress-circular
+    >
     <v-btn
       id="cancel"
       v-if="!isConnecting"
