@@ -6,7 +6,7 @@
           <v-col cols="12" sm="8" md="4">
             <v-card class="elevation-12">
               <v-toolbar color="primary" dark flat>
-                <v-toolbar-title>Guest Account form</v-toolbar-title>
+                <v-toolbar-title>Sign Up form</v-toolbar-title>
                 <v-spacer />
                 <v-tooltip bottom>
                   <span>Source</span>
@@ -16,21 +16,29 @@
                 </v-tooltip>
               </v-toolbar>
               <v-card-text>
-                <v-form @submit.prevent="guest">
+                <v-form @submit.prevent="signup">
                   <v-text-field
-                    label="First Name"
-                    name="firstname"
-                    type="text"
-                    v-model="firstname"
+                    label="Email"
+                    name="email"
+                    type="email"
+                    v-model="email"
                   />
-                  <v-text-field label="Last Name" name="lastname" type="text" v-model="lastname" />
+                  <v-text-field
+                    id="password"
+                    label="Password"
+                    name="password1"
+                    type="password"
+                    v-model="password1"
+                  />
                   <p v-if="errorText" class="text-danger">{{ errorText }}</p>
                 </v-form>
               </v-card-text>
               <v-card-actions>
                 <v-spacer />
                 <v-btn color="primary" :to="{ name: 'Home' }">Back</v-btn>
-                <v-btn type="submit" v-on:click="guest" color="primary">Login</v-btn>
+                <v-btn type="submit" v-on:click="signup" color="primary"
+                  >Sign Up</v-btn
+                >
               </v-card-actions>
             </v-card>
           </v-col>
@@ -42,23 +50,20 @@
 
 <script>
 export default {
-  name: "guest",
+  name: "signup",
   data() {
     return {
-      firstname: "",
-      lastname: "",
+      email: "",
+      password1: "",
       errorText: null
     };
   },
   methods: {
-    guest() {
-      if (this.firstname && this.lastname) {
+    signup() {
+      if (this.email && this.password1) {
         this.$router.push({
           name: "chatbot",
-          params: {
-            firstname: this.firstname,
-            lastname: this.lastname
-          }
+          params: { email: this.email, password1: this.password1 }
         });
       } else {
         this.errorText = "Please fill in the necessary details!";
