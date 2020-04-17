@@ -56,7 +56,7 @@ export default {
         console.log("Browser does not support microphone");
       }
       navigator.mediaDevices //authorise the application to access media device
-        .getUserMedia({ audio: true, video: true })
+        .getUserMedia({ audio: true, video: false })
         .then(function(stream) {
           stream.getTracks().forEach(function(track) {
             track.stop();
@@ -95,6 +95,10 @@ export default {
           console.log("calling");
         }
         document.addEventListener(
+          rainbowSDK.webRTC.RAINBOW_ONWEBRTCERRORHANDLED,
+          onWebRTCErrorHandled
+        );
+        document.addEventListener(
           rainbowSDK.webRTC.RAINBOW_ONWEBRTCCALLSTATECHANGED,
           self.onWebRTCCallChanged
         );
@@ -103,41 +107,17 @@ export default {
         console.log(err);
       }
     },
-    onWebRTCCallChanged: async function(event) {
+    onWebRTCCallChanged: function(event) {
       let self = this;
       self.call = event.detail;
       console.log("OnWebRTCCallChanged event", event.detail.status);
       console.log(self.call.status.value);
-      if (self.call.status.value === "incommingCall") {
-        // You have an incoming call, do something about it:
-        // Detect the type of incoming call
-
-        if (self.call.remoteMedia === 3) {
-          // The incoming call is of type audio + video
-          rainbowSDK.webRTC.answerInVideo(self.call);
-
-          // Populate the #minivideo and #largevideo elements with the video streams
-
-          rainbowSDK.webRTC.showLocalVideo();
-          rainbowSDK.webRTC.showRemoteVideo(self.call);
-        } else if (self.call.remoteMedia === 1) {
-          // The incoming call is of type audio
-          rainbowSDK.webRTC.answerInAudio(self.call);
-        }
-      }
     }
+  },
+  onWebRTCErrorHandled: function(event) {
+    let errorSDK = event.detail;
+    console.log("WebRTC ERROR: ", errorSDK);
   }
-  // endCall: async function() {
-  //   let self = this;
-  //   self.exit = true;
-  //   await rainbowSDK.webRTC.release(self.call);
-  //   console.log("Session Ended");
-  // },
-  // moveToChat: async function() {
-  //   console.log("moving to chat");
-  //   await rainbowSDK.webRTC.release(this.call);
-  //   await this.$router.push({ name: "chatbot" });
-  // }
 };
 </script>
 
