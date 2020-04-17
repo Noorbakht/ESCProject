@@ -43,7 +43,7 @@
           v-model="txt"
         />
         <!-- <img :src="imageUrl" class="img-fluid" /> -->
-        <i class="fas fa-paperclip fa-2x fa-fw" @click="onPickFile"></i>
+        <!-- <i class="fas fa-paperclip fa-2x fa-fw" @click="onPickFile"></i>
         <input
           type="file"
           style="display: none"
@@ -51,7 +51,7 @@
           id="fileUpload"
           accept="image/*"
           @change="onFilePicked"
-        />
+        />-->
         <i name="toCall" class="fas fa-phone-square fa-3x" @click="call"></i>
         <v-btn name="msgbutton" right height="60px" @click="sendMessage">Send</v-btn>
       </v-footer>
