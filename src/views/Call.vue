@@ -96,7 +96,7 @@ export default {
         }
         document.addEventListener(
           rainbowSDK.webRTC.RAINBOW_ONWEBRTCERRORHANDLED,
-          onWebRTCErrorHandled
+          self.onWebRTCErrorHandled
         );
         document.addEventListener(
           rainbowSDK.webRTC.RAINBOW_ONWEBRTCCALLSTATECHANGED,
@@ -118,6 +118,17 @@ export default {
     let errorSDK = event.detail;
     console.log("WebRTC ERROR: ", errorSDK);
   }
+  // endCall: async function() {
+  //   let self = this;
+  //   self.exit = true;
+  //   await rainbowSDK.webRTC.release(self.call);
+  //   console.log("Session Ended");
+  // },
+  // moveToChat: async function() {
+  //   console.log("moving to chat");
+  //   await rainbowSDK.webRTC.release(this.call);
+  //   await this.$router.push({ name: "chatbot" });
+  // }
 };
 </script>
 
