@@ -2,7 +2,7 @@
     <v-app>
         <div class="text-center" id="call">
             <transition name="fade">
-                <Waitpage v-bind:isConnecting="isConnecting" v-if="!start" />
+                <Loading v-bind:isConnecting="isConnecting" v-if="!start" />
             </transition>
             <header>
                 <h1 class="font-weight-light mb-5 header">
@@ -48,6 +48,7 @@ export default {
     mounted() {
         let self = this;
         self.checkCall();
+        console.log(this.$store.state.agentId);
         if (this.$store.state.agentId != "") {
             self.isConnecting = true;
             self.startCall();
