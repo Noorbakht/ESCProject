@@ -4,10 +4,9 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 
 export const store = new Vuex.Store({
-  state: {
-    firstname: "",
-    lastname: "",
-    agentId: "",
-    count: 100
-  }
+    state: {
+        firstname: "",
+        lastname: "",
+        agentId: ""
+    }
 });

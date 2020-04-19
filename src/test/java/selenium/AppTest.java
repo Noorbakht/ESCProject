@@ -31,7 +31,7 @@ public class AppTest {
     // click all buttons
     @Test
     public void testClickButtons() throws InterruptedException {
-        driver.get("http://localhost:8081/#/");
+        driver.get("https://localhost:8080/");
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         // get all the buttons
         java.util.List<WebElement> buttons = driver.findElements(By.tagName("a"));
@@ -66,7 +66,7 @@ public class AppTest {
     public void testLoginSuccess() throws InterruptedException {
         String MyUserName = "jcjiayichow@gmail.com";
         String MyPassword = "Password";
-        driver.get("http://localhost:8081/#/login/");
+        driver.get("https://localhost:8080/login/");
 
         // wait for page to load
         Thread.sleep(3000);
@@ -93,7 +93,7 @@ public class AppTest {
         Thread.sleep(3000);
         // check the new page
         String url = driver.getCurrentUrl();
-        assertEquals("http://localhost:8081/#/chatbot", url);
+        assertEquals("https://localhost:8080/chatbot", url);
 
         // click chatbox
         WebElement ChatBox = driver.findElement(By.name("msgbox"));
@@ -124,7 +124,7 @@ public class AppTest {
     public void testLoginFail() throws InterruptedException {
         String MyUserName = "wrongemail";
         String MyPassword = "wrongpassword";
-        driver.get("http://localhost:8081/#/login/");
+        driver.get("https://localhost:8080/login/");
 
         // wait for page to load
         Thread.sleep(3000);
@@ -152,6 +152,6 @@ public class AppTest {
 
         // check that the page is still the current page
         String url = driver.getCurrentUrl();
-        assertEquals("http://localhost:8081/#/login/", url);
+        assertEquals("https://localhost:8080/login/", url);
     }
 }

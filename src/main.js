@@ -6,23 +6,32 @@ import VueResource from "vue-resource";
 import VueSimpleAlert from "vue-simple-alert";
 import VueSocketIO from "vue-socket.io";
 import { store } from "./plugins/store";
-import VueUp from "vueup";
+import Vuesax from "vuesax";
+import { vsButton, vsSelect, vsPopup } from "vuesax";
+import VueMaterial from "vue-material";
+import "vue-material/dist/vue-material.min.css";
+import "vuesax/dist/vuesax.css"; //Vuesax styles
+import VueFormulate from "@braid/vue-formulate";
 
-Vue.use(VueUp);
+Vue.use(VueFormulate);
 
-import VueChatScroll from "vue-chat-scroll";
-Vue.use(VueChatScroll);
+Vue.use(VueMaterial);
+Vue.use(Vuesax, {
+    vsButton,
+    vsSelect,
+    vsPopup
+    // options here
+});
+Vue.use(VueSimpleAlert);
+Vue.use(VueResource);
 
 Vue.use(
     new VueSocketIO({
         debug: true,
-        connection: "https://limitless-sierra-11102.herokuapp.com/",
+        connection: "https://limitless-sierra-11102.herokuapp.com/availability",
         options: { autoConnect: false }
     })
 );
-
-Vue.use(VueSimpleAlert);
-Vue.use(VueResource);
 
 Vue.config.productionTip = false;
 
