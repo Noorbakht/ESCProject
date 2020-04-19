@@ -36,6 +36,7 @@ import rainbowSDK from "rainbow-web-sdk";
 // import axios from "axios";
 
 export default {
+<<<<<<< HEAD
     name: "Call",
     components: {},
     data: () => ({
@@ -151,6 +152,118 @@ export default {
         await rainbowSDK.webRTC.release(this.call);
         await this.$router.push({ name: "chatbot" });
     }
+=======
+  name: "Call",
+  components: {},
+  data: () => ({
+    start: false,
+    isConnecting: false,
+    cancelled: false,
+    call: "",
+    exit: false
+  }),
+  mounted() {
+    let self = this;
+    self.checkCall();
+    if (this.$store.state.agentId != "") {
+      self.isConnecting = true;
+      self.startCall();
+    } else {
+      console.log("agent id empty");
+    }
+  },
+  methods: {
+    checkCall: function() {
+      if (rainbowSDK.webRTC.canMakeAudioVideoCall()) {
+        console.log("Browser supports calls");
+      } else {
+        console.log("Browser does not support calls");
+      }
+      if (rainbowSDK.webRTC.hasACamera()) {
+        console.log("Browser supports video");
+      } else {
+        console.log("Browser does not support video");
+      }
+      if (rainbowSDK.webRTC.hasAMicrophone()) {
+        console.log("Browser supports microphone");
+      } else {
+        console.log("Browser does not support microphone");
+      }
+      navigator.mediaDevices //authorise the application to access media device
+        .getUserMedia({ audio: true, video: false })
+        .then(function(stream) {
+          stream.getTracks().forEach(function(track) {
+            track.stop();
+          });
+          navigator.mediaDevices
+            .enumerateDevices()
+            .then(function(devices) {
+              devices.forEach(function(device) {
+                console.log(device);
+                if (device.deviceId === "default") {
+                  console.log(device);
+                  console.log(device.label, "is available");
+                  rainbowSDK.webRTC.useMicrophone("default");
+                  rainbowSDK.webRTC.useSpeaker("default");
+                }
+              });
+            })
+            .catch(function(error) {
+              console.log(error);
+            });
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    startCall: async function() {
+      let self = this;
+      try {
+        console.log(this.$store.state.agentId);
+        let contact = await rainbowSDK.contacts.searchById(
+          this.$store.state.agentId
+        );
+        console.log(contact);
+        let res = rainbowSDK.webRTC.callInAudio(contact);
+        if (res.label === "OK") {
+          console.log("calling");
+        }
+        document.addEventListener(
+          rainbowSDK.webRTC.RAINBOW_ONWEBRTCERRORHANDLED,
+          self.onWebRTCErrorHandled
+        );
+        document.addEventListener(
+          rainbowSDK.webRTC.RAINBOW_ONWEBRTCCALLSTATECHANGED,
+          self.onWebRTCCallChanged
+        );
+        self.start = true;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    onWebRTCCallChanged: function(event) {
+      let self = this;
+      self.call = event.detail;
+      console.log("OnWebRTCCallChanged event", event.detail.status);
+      console.log(self.call.status.value);
+    }
+  },
+  onWebRTCErrorHandled: function(event) {
+    let errorSDK = event.detail;
+    console.log("WebRTC ERROR: ", errorSDK);
+  }
+  // endCall: async function() {
+  //   let self = this;
+  //   self.exit = true;
+  //   await rainbowSDK.webRTC.release(self.call);
+  //   console.log("Session Ended");
+  // },
+  // moveToChat: async function() {
+  //   console.log("moving to chat");
+  //   await rainbowSDK.webRTC.release(this.call);
+  //   await this.$router.push({ name: "chatbot" });
+  // }
+>>>>>>> 84de2453daf963b1d1fa5ba2a756ead5183dee04
 };
 </script>
 
