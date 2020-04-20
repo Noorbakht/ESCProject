@@ -2,7 +2,7 @@
   <v-app>
     <div class="text-center" id="call">
       <transition name="fade">
-        <Waitpage v-bind:isConnecting="isConnecting" v-if="!start" />
+        <Loading v-bind:isConnecting="isConnecting" v-if="!start" />
       </transition>
       <header>
         <h1 class="font-weight-light mb-5 header">Talk to your agent right now!</h1>
@@ -18,6 +18,7 @@
             x-large
             depressed
             tile
+            @click="endCall"
           >
             <h3>End Call</h3>
           </v-btn>
@@ -29,17 +30,17 @@
 
 <script>
 import rainbowSDK from "rainbow-web-sdk";
+import Loading from "./Loading";
 // import axios from "axios";
 
 export default {
   name: "CallAudio",
-  components: {},
+  components: { Loading },
   data: () => ({
     start: false,
     isConnecting: false,
     cancelled: false,
-    call: "",
-    exit: false
+    call: ""
   }),
   mounted() {
     let self = this;
@@ -120,20 +121,15 @@ export default {
       self.call = event.detail;
       console.log("OnWebRTCCallChanged event", event.detail.status);
       console.log(self.call.status.value);
+    },
+    onWebRTCErrorHandled: function(event) {
+      let errorSDK = event.detail;
+      console.log("WebRTC ERROR: ", errorSDK);
+    },
+    endCall: async function() {
+      let self = this;
+      await rainbowSDK.webRTC.release(self.call);
     }
-  },
-  onWebRTCErrorHandled: function(event) {
-    let errorSDK = event.detail;
-    console.log("WebRTC ERROR: ", errorSDK);
-  },
-  endCall: async function() {
-    let self = this;
-    self.exit = true;
-    await rainbowSDK.webRTC.release(self.call);
-  },
-  moveToChat: async function() {
-    await rainbowSDK.webRTC.release(this.call);
-    await this.$router.push({ name: "chatbot" });
   }
 };
 </script>

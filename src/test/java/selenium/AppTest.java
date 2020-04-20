@@ -1,6 +1,8 @@
 package selenium;
 
 import static org.junit.Assert.assertEquals;
+
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 import org.junit.After;
 import org.junit.Before;
@@ -10,6 +12,12 @@ import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeDriverService;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 public class AppTest {
     WebDriver driver;
@@ -18,7 +26,17 @@ public class AppTest {
     public void BeforeTest() throws InterruptedException {
         String path = "C:/Users/noorb/OneDrive/Desktop/chromedriver_win32/chromedriver.exe";
         System.setProperty("webdriver.chrome.driver", path);
-        driver = new ChromeDriver();
+
+        DesiredCapabilities capability = DesiredCapabilities.chrome();
+        capability.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+        ChromeDriverService service = new ChromeDriverService.Builder()
+                .usingDriverExecutable(new File("/Users/noorb/OneDrive/Desktop/chromedriver_win32/chromedriver.exe"))
+                .usingAnyFreePort().build();
+        ChromeOptions options = new ChromeOptions();
+        options.merge(capability);
+        ChromeDriver driver = new ChromeDriver(service, options);
+        driver.get("https://localhost:8080/");
+        // driver = new ChromeDriver();
         // Thread.sleep(3000);
     }
 
@@ -33,30 +51,33 @@ public class AppTest {
     public void testClickButtons() throws InterruptedException {
         driver.get("https://localhost:8080/");
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        // get all the buttons
-        java.util.List<WebElement> buttons = driver.findElements(By.tagName("a"));
 
-        // click all buttons in a web page
-        for (int i = 0; i < buttons.size(); i++) {
-            System.out.println("*** Navigating to" + " " + buttons.get(i).getAttribute("href"));
-            if (buttons.get(i).getAttribute("href") == null)
-                continue;
-            boolean staleElementLoaded = true;
-            // the loop checks whether the elements is properly loaded
-            while (staleElementLoaded) {
-                try {
-                    // navigate to the link
-                    buttons.get(i).click();
-                    Thread.sleep(3000);
-                    // click the back button in browser
-                    driver.navigate().back();
-                    buttons = driver.findElements(By.tagName("a"));
-                    staleElementLoaded = false;
-                } catch (StaleElementReferenceException e) {
-                    staleElementLoaded = true;
-                }
-            }
-        }
+        driver.findElement(By.id("button")).click();
+        // get all the buttons
+        // java.util.List<WebElement> buttons = driver.findElements(By.tagName("a"));
+
+        // // click all buttons in a web page
+        // for (int i = 0; i < buttons.size(); i++) {
+        // System.out.println("*** Navigating to" + " " +
+        // buttons.get(i).getAttribute("href"));
+        // if (buttons.get(i).getAttribute("href") == null)
+        // continue;
+        // boolean staleElementLoaded = true;
+        // // the loop checks whether the elements is properly loaded
+        // while (staleElementLoaded) {
+        // try {
+        // // navigate to the link
+        // buttons.get(i).click();
+        // Thread.sleep(3000);
+        // // click the back button in browser
+        // driver.navigate().back();
+        // buttons = driver.findElements(By.tagName("a"));
+        // staleElementLoaded = false;
+        // } catch (StaleElementReferenceException e) {
+        // staleElementLoaded = true;
+        // }
+        // }
+        // }
 
     };
 

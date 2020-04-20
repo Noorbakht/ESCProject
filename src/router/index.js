@@ -2,9 +2,7 @@ import "@fortawesome/fontawesome-free/css/all.css";
 import Vue from "vue";
 import Router from "vue-router";
 import Home from "../views/Home.vue";
-import Login from "../views/login.vue";
 import Guest from "../views/guest.vue";
-import SignUp from "../views/signup.vue";
 import { store } from "../plugins/store.js";
 
 Vue.use(Router);
@@ -28,16 +26,6 @@ let router = new Router({
             // which is lazy-loaded when the route is visited.
             component: () =>
                 import(/* webpackChunkName: "about" */ "../views/About.vue")
-        },
-        {
-            path: "/login",
-            name: "login",
-            component: Login
-        },
-        {
-            path: "/signup",
-            name: "signup",
-            component: SignUp
         },
         {
             path: "/guest",

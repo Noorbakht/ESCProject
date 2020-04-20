@@ -1,9 +1,9 @@
-/* eslint-disable prettier/prettier */
 <template>
   <div class="load">
-    <h1 v-if="!isConnecting" class="font-weight-light ma-10">
-      Bringing you to your chatpage in a short while
-    </h1>
+    <h1
+      v-if="!isConnecting"
+      class="font-weight-light ma-10"
+    >Bringing you to your page in a short while</h1>
     <v-progress-circular
       :rotate="-90"
       :size="200"
@@ -11,17 +11,15 @@
       :value="value"
       color="teal"
       indeterminate
-      >{{ value }}</v-progress-circular
-    >
+    >{{ value }}</v-progress-circular>
     <v-btn
+      depressed
+      x-large
       id="cancel"
       v-if="!isConnecting"
-      x-large
-      depressed
       class="ma-10 green white--text"
       :to="{ name: 'Home' }"
     >
-      <!-- <v-icon large left>close</v-icon> -->
       <h2 class="font-weight-medium">Cancel</h2>
     </v-btn>
   </div>
