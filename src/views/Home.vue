@@ -47,10 +47,7 @@
         </v-card>
         <v-card id="card2" class="mx-auto" color="#000000" dark max-width="400">
           <v-card-title>
-            <span class="title font-weight-light">
-              Number of agents available for general
-              enquiries:
-            </span>
+            <span class="title font-weight-light">Number of agents available for general enquiries:</span>
           </v-card-title>
           <v-card-text class="headline font-weight-bold">
             <h1>{{ GE }}</h1>
@@ -102,7 +99,7 @@ export default {
     rainbowSDK.start();
     rainbowSDK.load();
     this.getLiveData();
-    this.timer = setInterval(this.getLiveData, 10000);
+    this.timer = setInterval(this.getLiveData, 8000);
   },
   methods: {
     onLoaded: function() {
@@ -147,21 +144,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-/* h3 {
-    margin: 40px 0 0;
-}
-ul {
-    list-style-type: none;
-    padding: 0;
-}
-li {
-    display: inline-block;
-    margin: 0 10px;
-    text-decoration: none;
-}
-a {
-    color: #42b983;
-} */
 .header {
   background-image: url("../assets/bank.jpg");
   color: #fff;
