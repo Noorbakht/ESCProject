@@ -100,7 +100,7 @@ public class AppTest {
         Thread.sleep(30000);
         // check the new page
         String url = driver.getCurrentUrl();
-        assertEquals("http://localhost:8082/chatbot", url);
+        assertEquals("http://localhost:8080/chatbot", url);
 
         // click chatbox
         WebElement ChatBox = driver.findElement(By.name("msgbox"));
