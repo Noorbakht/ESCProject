@@ -122,9 +122,9 @@ public class AppTest {
         assertEquals("http://localhost:8080/feedback", url);
     }
 
-    // Failed login to Rainbow
+    // Failed to go into chatpage (missing first name)
     @Test
-    public void testLoginFail() throws InterruptedException {
+    public void testFirstNameEmpty() throws InterruptedException {
         driver.get("http://localhost:8080/");
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 
@@ -139,6 +139,38 @@ public class AppTest {
 
         // send the username into the field
         username.sendKeys("firstName");
+
+        // wait for selenium to key in everything
+        Thread.sleep(3000);
+        // login
+        WebElement LoginButton = driver.findElement(By.name("tochatbotbtn"));
+        LoginButton.click();
+
+        // wait for new page to load
+        Thread.sleep(30000);
+
+        // check that the page is still the current page
+        String url = driver.getCurrentUrl();
+        assertEquals("http://localhost:8080/guest", url);
+    }
+
+    // Failed to go into chatpage (missing last name)
+    @Test
+    public void testLastNameEmpty() throws InterruptedException {
+        driver.get("http://localhost:8080/");
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+
+        driver.findElement(By.id("button")).click();
+
+        // wait for page to load
+        Thread.sleep(3000);
+
+        // //get username field
+        WebElement username = driver.findElement(By.name("lastname"));
+        System.out.println(username);
+
+        // send the username into the field
+        username.sendKeys("lastname");
 
         // wait for selenium to key in everything
         Thread.sleep(3000);
