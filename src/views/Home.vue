@@ -47,7 +47,10 @@
         </v-card>
         <v-card id="card2" class="mx-auto" color="#000000" dark max-width="400">
           <v-card-title>
-            <span class="title font-weight-light">Number of agents available for general enquiries:</span>
+            <span class="title font-weight-light">
+              Number of agents available for general
+              enquiries:
+            </span>
           </v-card-title>
           <v-card-text class="headline font-weight-bold">
             <h1>{{ GE }}</h1>

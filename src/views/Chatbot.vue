@@ -6,7 +6,7 @@
     <div class="chatBox" id="chatBox" ref="chatBox">
       <header class="header">
         <span class="icon">
-          <v-btn :to="{ name: 'feedback' }" x-large name="toHomebutton">
+          <v-btn id="backHome" :to="{ name: 'feedback' }" x-large name="toHomebutton">
             <i id="fontHouse" class="fas fa-house-user" name="toHomebutton" fa-4x>
               <br />
               <a>Home</a>
@@ -62,7 +62,6 @@ export default {
   data: () => ({
     agentId: "",
     guestId: "",
-    file: "",
     flag: false,
     message: "",
     icons: {
@@ -73,6 +72,7 @@ export default {
     isConnecting: false,
     start: false,
     selectedFile: "",
+    count: 0,
     messages: [
       {
         text:
@@ -256,6 +256,10 @@ export default {
         });
         $("html, body").animate({ scrollTop: $(document).height() }, "slow");
         self.txt = "";
+        self.count += 1;
+        if (self.count > 40) {
+          self.exitByAdmin();
+        }
       }
     },
     //when message received
@@ -273,6 +277,9 @@ export default {
         time: moment().format("h:mm a")
       });
       $("html, body").animate({ scrollTop: $(document).height() }, "slow");
+      //neutralize the count if it's not a spam
+      this.count -= 1;
+      console.log(this.count);
     },
     receive1: function(event) {
       let self = this;
@@ -284,12 +291,21 @@ export default {
         time: moment().format("h:mm a")
       });
       $("html, body").animate({ scrollTop: $(document).height() }, "slow");
+      //neutralize the count if it's not a spam
+      this.count -= 1;
+      console.log(this.count);
     },
     //when you send out message
     receipt: function(event) {
       console.log("receipt");
       console.log(event.detail.message.data);
       console.log(event.detail.message.side);
+    },
+    exitByAdmin: async function() {
+      let self = this;
+      await rainbowSDK.conversations.closeConversation(self.conversation);
+      console.log("SPAM MESSAGE ALERT");
+      self.$router.push({ name: "Home" });
     }
   },
   mounted() {

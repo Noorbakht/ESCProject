@@ -85,11 +85,11 @@ public class LoginFuzz {
         String path = "C:/Users/noorb/OneDrive/Desktop/chromedriver_win32/chromedriver.exe";
         System.setProperty("webdriver.chrome.driver", path);
         WebDriver driver = new ChromeDriver();
-        driver.get("http://localhost:8081/#/login");
+        driver.get("http://localhost:8082/guest");
 
         Thread.sleep(3000);
-        WebElement username = driver.findElement(By.name("name"));
-        WebElement password = driver.findElement(By.name("password"));
+        WebElement username = driver.findElement(By.name("firstname"));
+        WebElement password = driver.findElement(By.name("lastname"));
 
         username.sendKeys(myUserName);
         password.sendKeys(myPassword);
