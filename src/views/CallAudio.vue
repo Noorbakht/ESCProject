@@ -123,15 +123,15 @@ export default {
             self.call = event.detail;
             console.log("OnWebRTCCallChanged event", event.detail.status);
             console.log(self.call.status.value);
+        },
+        onWebRTCErrorHandled: function(event) {
+            let errorSDK = event.detail;
+            console.log("WebRTC ERROR: ", errorSDK);
+        },
+        endCall: async function() {
+            let self = this;
+            await rainbowSDK.webRTC.release(self.call);
         }
-    },
-    onWebRTCErrorHandled: function(event) {
-        let errorSDK = event.detail;
-        console.log("WebRTC ERROR: ", errorSDK);
-    },
-    endCall: async function() {
-        let self = this;
-        await rainbowSDK.webRTC.release(self.call);
     }
 };
 </script>
