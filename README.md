@@ -6,7 +6,7 @@
 Run ``` npm install vue ``` to install vue
 
 ### Run project
-Go under noorkhan branch to find the code
+Go under noorkhan branch to find the code and run 
 ``` npm run serve ``` to run project
 
 ### Testing
