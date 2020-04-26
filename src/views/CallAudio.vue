@@ -19,6 +19,7 @@
             x-large
             depressed
             tile
+            @click="endCall"
           >
             <h3>End Call</h3>
           </v-btn>
@@ -132,11 +133,6 @@ export default {
     self.exit = true;
     await rainbowSDK.webRTC.release(self.call);
     console.log("Session Ended");
-  },
-  moveToChat: async function() {
-    console.log("moving to chat");
-    await rainbowSDK.webRTC.release(this.call);
-    await this.$router.push({ name: "chatbot" });
   }
 };
 </script>
